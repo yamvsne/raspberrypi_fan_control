@@ -22,10 +22,11 @@ class FanControlLogger:
     @property
     def _file_path(self):
         return self._save_dir + self._file_name
-
+    
     def _create_file(self):
         print(f"Create New File: {self._file_path}")
-        open(self._file_path, "w")
+        with open(self._file_path, "w") as f:
+            f.write("")
 
     def _generate_file_name(self):
         now = datetime.now()
