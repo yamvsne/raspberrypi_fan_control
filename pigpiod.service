@@ -2,7 +2,7 @@
 Description=init pigpio daemon
 
 [Service]
-ExecStart=/usr/local/bin/pigpiod -l -m # localhost socket only, disable alerts
+ExecStart=/usr/local/bin/pigpiod -m  # disable alerts
 Restart=on-failure
 Type=forking
 
