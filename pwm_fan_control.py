@@ -32,6 +32,14 @@ class FanControlLogger:
         self._file_lines_max = file_lines_max
         self._create_file()
 
+    def write(self, temp: str, duty: str):
+        """温度とデューティー比をログファイルに書き込む"""
+        log = self._generate_log_string(temp, duty)
+        self._write_to_file(log)
+        if self._count_file_lines() >= self._file_lines_max:
+            self._file_name = self._generate_file_name()
+            self._create_file()
+
     @property
     def _file_path(self):
         return self._save_dir + self._file_name
@@ -62,13 +70,6 @@ class FanControlLogger:
     def _write_to_file(self, log: str):
         with open(self._file_path, "a") as f:
             f.write(log)
-
-    def write(self, temp: str, duty: str):
-        log = self._generate_log_string(temp, duty)
-        self._write_to_file(log)
-        if self._count_file_lines() >= self._file_lines_max:
-            self._file_name = self._generate_file_name()
-            self._create_file()
 
     def _wait_for_time_sync(self):
         while True:
