@@ -3,6 +3,7 @@
 
 import time
 from datetime import datetime
+import os
 import subprocess
 
 import pigpio
@@ -46,8 +47,12 @@ class FanControlLogger:
     
     def _create_file(self):
         print(f"Create New File: {self._file_path}")
-        with open(self._file_path, "w") as f:
+        self._make_save_directory_if_not_exists()
             f.write("")
+
+    def _make_save_directory_if_not_exists(self):
+        if not os.path.exists(self._save_dir):
+            os.makedirs(self._save_dir)
 
     def _generate_file_name(self):
         now = datetime.now()
