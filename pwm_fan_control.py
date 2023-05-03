@@ -1,10 +1,15 @@
 #!/usr/bin/python3
 # -*-coding: utf-8 -*-
 
+import time
 from datetime import datetime
+import subprocess
+
 import pigpio
 import time
 
+
+TIME_SYNC_WAIT_TIME = 3  # [s]
 TEMPERATURE_FILE_PATH = "/sys/class/thermal/thermal_zone0/temp"
 LOG_SAVE_DIR = "/var/log/"
 SLEEP_TIME = 30  # [s]
@@ -13,7 +18,15 @@ FILE_LINES_MAX = 10000
 
 
 class FanControlLogger:
-    def __init__(self, save_dir: str, file_lines_max: int):
+    def __init__(
+        self,
+        save_dir: str,
+        file_lines_max: int,
+        wait_for_time_sync: bool = True,
+    ):
+        if wait_for_time_sync:
+            self._wait_for_time_sync()
+
         self._save_dir = save_dir
         self._file_name = self._generate_file_name()
         self._file_lines_max = file_lines_max
@@ -56,6 +69,28 @@ class FanControlLogger:
         if self._count_file_lines() >= self._file_lines_max:
             self._file_name = self._generate_file_name()
             self._create_file()
+
+    def _wait_for_time_sync(self):
+        while True:
+            print("Check Time Sync...")
+            result = subprocess.run(
+                (
+                    "/usr/bin/timedatectl"
+                    "| grep synchronized"
+                    "| cut -d':' -f2"
+                    "| tr -d ' '",
+                ),
+                shell=True,
+                stdout=subprocess.PIPE,
+            )
+            print(result.stdout.decode("utf-8"))
+            if result.stdout.decode("utf-8") == "yes\n":
+                print("Time Sync is completed!")
+                break
+
+            print("Time Sync is not completed.")
+            print("Wait for Time Sync...")
+            time.sleep(TIME_SYNC_WAIT_TIME)
 
 
 def get_temp():
