@@ -66,10 +66,10 @@ class FanControlLogger:
 
     def _generate_log_string(self, temp: str, duty: str):
         now = datetime.now()
-        log = now.strftime('[%Y/%m/%d %H:%M:%S]') \
-            + " temp: " + str(temp) \
-            + " duty set: " + str(duty) \
-            + "\n"
+        log = (
+            f"{now.strftime('[%Y/%m/%d %H:%M:%S]')} "
+            f"temp: {str(temp)}, duty: {str(duty)}\n"
+        )
         return log
 
     def _write_to_file(self, log: str):
