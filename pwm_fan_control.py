@@ -48,6 +48,7 @@ class FanControlLogger:
     def _create_file(self):
         print(f"Create New File: {self._file_path}")
         self._make_save_directory_if_not_exists()
+        with open(self._file_path, "w", encoding="utf-8") as f:
             f.write("")
 
     def _make_save_directory_if_not_exists(self):
