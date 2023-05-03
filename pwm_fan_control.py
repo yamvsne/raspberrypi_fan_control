@@ -43,7 +43,7 @@ class FanControlLogger:
     @property
     def _file_path(self):
         return self._save_dir + self._file_name
-    
+
     def _create_file(self):
         print(f"Create New File: {self._file_path}")
         self._make_save_directory_if_not_exists()
@@ -104,7 +104,7 @@ class FanControlLogger:
 def get_temp():
     with open(TEMPERATURE_FILE_PATH, "r", encoding="utf-8") as f:
         data = f.readline()
-        temp = float(data)/1000.0
+        temp = float(data) / 1000.0
     return temp
 
 
@@ -113,7 +113,7 @@ def main():
     pig.set_mode(PIN_1, pigpio.OUTPUT)
     fc_logger = FanControlLogger(LOG_SAVE_DIR, FILE_LINES_MAX)
 
-    while (True):
+    while True:
         temp = get_temp()
         duty = 100
         hz = 100  # なんで100に設定してるのか忘れてしまった…
