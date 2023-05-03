@@ -73,7 +73,7 @@ class FanControlLogger:
         return log
 
     def _write_to_file(self, log: str):
-        with open(self._file_path, "a") as f:
+        with open(self._file_path, "a", encoding="utf-8") as f:
             f.write(log)
 
     def _wait_for_time_sync(self):
@@ -100,7 +100,7 @@ class FanControlLogger:
 
 
 def get_temp():
-    with open(TEMPERATURE_FILE_PATH, "r") as f:
+    with open(TEMPERATURE_FILE_PATH, "r", encoding="utf-8") as f:
         data = f.readline()
         temp = float(data)/1000.0
     return temp
