@@ -62,7 +62,8 @@ class FanControlLogger:
         return new_name
 
     def _count_file_lines(self):
-        count = sum(1 for _ in open(self._file_path))
+        with open(self._file_path, encoding="utf-8") as f:
+            count = sum(1 for _ in f)
         return count
 
     def _generate_log_string(self, temp: str, duty: str):
