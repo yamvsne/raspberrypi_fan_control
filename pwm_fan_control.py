@@ -7,7 +7,6 @@ import os
 import subprocess
 
 import pigpio
-import time
 
 
 TIME_SYNC_WAIT_TIME = 3  # [s]
