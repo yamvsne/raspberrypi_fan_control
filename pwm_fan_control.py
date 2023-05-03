@@ -90,6 +90,7 @@ class FanControlLogger:
                 ),
                 shell=True,
                 stdout=subprocess.PIPE,
+                check=False,
             )
             print(result.stdout.decode("utf-8"))
             if result.stdout.decode("utf-8") == "yes\n":
