@@ -12,7 +12,7 @@ import time
 
 TIME_SYNC_WAIT_TIME = 3  # [s]
 TEMPERATURE_FILE_PATH = "/sys/class/thermal/thermal_zone0/temp"
-LOG_SAVE_DIR = "/var/log/"
+LOG_SAVE_DIR = "/var/log/pwm_fan_control/"
 SLEEP_TIME = 30  # [s]
 PIN_1 = 18
 FILE_LINES_MAX = 10000
