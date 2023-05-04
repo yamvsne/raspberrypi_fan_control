@@ -2,7 +2,7 @@
 Description=pwm fan control
 
 [Service]
-ExecStart=/usr/local/bin/pwm_fan_control.py
+ExecStart=/usr/local/bin/pwm_fan_control
 Restart=on-failure
 RestartSec=10s
 Type=simple
