@@ -15,11 +15,12 @@ PIN_1 = 18
 FILE_LINES_MAX = 10000
 
 
-def get_temp():
+def _get_hw_temp() -> int:
     with open(TEMPERATURE_FILE_PATH, "r", encoding="utf-8") as f:
         data = f.readline()
         temp = float(data) / 1000.0
-    return temp
+    return int(temp)
+
 
 
 def main():
@@ -28,7 +29,7 @@ def main():
     fc_logger = FanControlLogger(LOG_SAVE_DIR, FILE_LINES_MAX)
 
     while True:
-        temp = get_temp()
+        temp = _get_hw_temp()
         duty = 100
         hz = 100  # なんで100に設定してるのか忘れてしまった…
 
