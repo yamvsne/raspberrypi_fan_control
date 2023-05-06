@@ -22,6 +22,18 @@ def _get_hw_temp() -> int:
     return int(temp)
 
 
+def _get_duty(temp: int) -> int:
+    duty = 100
+    if 90 <= temp:
+        duty = 100
+    elif 70 <= temp < 90:
+        duty = 75
+    elif 50 <= temp < 70:
+        duty = 60
+    elif temp < 50:
+        duty = 0
+    return duty
+
 
 def main():
     pig = pigpio.pi()
@@ -30,20 +42,9 @@ def main():
 
     while True:
         temp = _get_hw_temp()
-        duty = 100
+        duty = _get_duty(temp)
         hz = 100  # なんで100に設定してるのか忘れてしまった…
-
-        if temp >= 90:
-            duty = 100
-        elif 80 > temp and temp >= 70:
-            duty = 75
-        elif 70 > temp and temp >= 50:
-            duty = 60
-        elif 50 > temp:
-            duty = 0
-
         pig.hardware_PWM(PIN_1, hz, duty * 10000)
-
         fc_logger.write(temp, duty)
 
         time.sleep(SLEEP_TIME)
