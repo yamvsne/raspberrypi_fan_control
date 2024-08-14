@@ -47,8 +47,8 @@ def main():
     while True:
         temp = _get_hw_temp()
         duty = _get_duty(temp)
-        fc_logger.write(temp, duty)
         pig.hardware_PWM(PIN_1, PWM_HZ, duty * 10000)
+        fc_logger.write(str(temp), str(duty))
 
         time.sleep(SLEEP_TIME)
 
