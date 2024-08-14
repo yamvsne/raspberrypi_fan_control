@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 # -*-coding: utf-8 -*-
 
+from collections import deque
 import time
+from typing import Tuple
 
 import pigpio
 
@@ -39,16 +41,39 @@ def _get_duty(temp: int) -> int:
     return duty
 
 
+def _create_duty_updater():
+    q = deque([False] * HYSTERESIS_STEPS, maxlen=HYSTERESIS_STEPS)
+
+    # qを保持したクロージャ
+    def _update_duty(temp: int, previous_duty: int) -> Tuple[bool, int]:
+        duty = _get_duty(temp)
+        q.append(duty == previous_duty)
+
+        if any(q):
+            # 1つでもTrueがある場合は更新しない
+            return False, previous_duty
+        else:
+            # 全てFalse (つまり現在設定されているdutyと異なる) 場合に更新
+            return True, duty
+
+    return _update_duty
+
+
 def main():
     pig = pigpio.pi()
     pig.set_mode(PIN_1, pigpio.OUTPUT)
     fc_logger = FanControlLogger(LOG_SAVE_DIR, FILE_LINES_MAX)
 
+    duty = 0
+    update_duty = _create_duty_updater()
+
     while True:
         temp = _get_hw_temp()
-        duty = _get_duty(temp)
-        pig.hardware_PWM(PIN_1, PWM_HZ, duty * 10000)
-        fc_logger.write(str(temp), str(duty))
+        should_set, duty = update_duty(temp, duty)
+
+        if should_set:
+            pig.hardware_PWM(PIN_1, PWM_HZ, duty * 10000)
+            fc_logger.write(str(temp), str(duty))
 
         time.sleep(SLEEP_TIME)
 
