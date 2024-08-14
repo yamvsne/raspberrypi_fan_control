@@ -10,9 +10,13 @@ from fan_control_logger import FanControlLogger
 
 TEMPERATURE_FILE_PATH = "/sys/class/thermal/thermal_zone0/temp"
 LOG_SAVE_DIR = "/var/log/pwm_fan_control/"
-SLEEP_TIME = 30  # [s]
-PIN_1 = 18
 FILE_LINES_MAX = 10000
+
+PIN_1 = 18
+PWM_HZ = 100  # なんで100に設定してるのか忘れてしまった…
+
+SLEEP_TIME = 10  # [s]
+HYSTERESIS_STEPS = 30  # 10秒 * 30ステップ = 5分
 
 
 def _get_hw_temp() -> int:
@@ -43,9 +47,8 @@ def main():
     while True:
         temp = _get_hw_temp()
         duty = _get_duty(temp)
-        hz = 100  # なんで100に設定してるのか忘れてしまった…
-        pig.hardware_PWM(PIN_1, hz, duty * 10000)
         fc_logger.write(temp, duty)
+        pig.hardware_PWM(PIN_1, PWM_HZ, duty * 10000)
 
         time.sleep(SLEEP_TIME)
 
